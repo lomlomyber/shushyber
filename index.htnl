@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Cybersecurity Quiz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Orbitron', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+            background-image: linear-gradient(45deg, #f0f0f0 25%, #e0e0e0 25%, #e0e0e0 50%, #f0f0f0 50%, #f0f0f0 75%, #e0e0e0 75%, #e0e0e0 100%);
+            background-size: 40px 40px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        body.dark-mode {
+            background-color: #333;
+            color: #f0f0f0;
+        }
+        h1 {
+            color: #ff0000;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            font-size: 2.5em;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #000;
+            text-align: center;
+            font-size: 1.8em;
+        }
+        #welcome h3 {
+            text-align: center;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+        .question, #welcome, #result, .review-item {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease-in-out, background-color 0.3s;
+        }
+        .dark-mode .question, .dark-mode #welcome, .dark-mode #result, .dark-mode .review-item {
+            background-color: rgba(50, 50, 50, 0.9);
+            color: #f0f0f0;
+        }
+        .question:hover, #welcome:hover, #result:hover, .review-item:hover {
+            transform: translateY(-5px);
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+        }
+        button {
+            margin: 10px 0;
+            padding: 15px;
+            background-color: #ff0000;
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        button:hover {
+            background-color: #000;
+            box-shadow: 0 5px 15px rgba(255,0,0,0.4);
+        }
+        #result {
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+        }
+        #score {
+            font-size: 2em;
+            color: #ff0000;
+        }
+        #welcome h1 {
+            color: #ff0000;
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+        #startQuiz, #restartQuiz {
+            display: block;
+            width: 250px;
+            margin: 30px auto;
+            font-size: 1.2em;
+            background-color: #000;
+        }
+        #startQuiz:hover, #restartQuiz:hover {
+            background-color: #ff0000;
+        }
+        #questionText {
+            font-size: 1.2em;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #000;
+        }
+        .dark-mode #questionText {
+            color: #f0f0f0;
+        }
+        #reviewPage {
+            text-align: center;
+        }
+        .review-item {
+            text-align: left;
+        }
+        .correct {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .incorrect {
+            color: #F44336;
+            font-weight: bold;
+        }
+        #progressBarContainer {
+            width: 100%;
+            background-color: #e0e0e0;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        #progressBar {
+            width: 0%;
+            height: 20px;
+            background-color: #ff0000;
+            transition: width 0.5s ease-in-out;
+        }
+        #timer {
+            text-align: center;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+        #darkModeToggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .dark-mode #darkModeToggle {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            h1 {
+                font-size: 2em;
+            }
+            button {
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button id="darkModeToggle">Toggle Dark Mode</button>
+    <div id="welcome">
+        <h1>Welcome field operation S.N.T.A department</h1>
+        <h2>This is a data security test for us to improve our knowledge</h2>
+        <h3>Let's start!</h3>
+        <button id="startQuiz">Start Quiz</button>
+    </div>
+    <div id="quiz" style="display: none;">
+        <h1>Cybersecurity Quiz</h1>
+        <div id="progressBarContainer">
+            <div id="progressBar"></div>
+        </div>
+        <div class="question">
+            <h2>Question <span id="questionNumber">1</span></h2>
+            <p id="questionText"></p>
+            <div class="options" id="options"></div>
+        </div>
+        <div id="timer">Time left: <span id="timeLeft">30</span> seconds</div>
+    </div>
+    <div id="result" style="display: none;"></div>
+    <div id="reviewPage" style="display: none;">
+        <h2>Review Your Answers</h2>
+        <div id="reviewContainer"></div>
+        <button id="restartQuiz">Restart Quiz</button>
+    </div>
+
+    <script>
+const questions = [
+    {
+        question: "איפה כדאי לאחסן את המחשב הנייד?",
+        options: [
+            "לא אקח איתי את המחשב לסבבים בחו״ל, אשאיר את המחשב במשרד",
+            ", אחסון המחשב בכספת בחדר, במידה ואין כספת אז במקום נסתר אם יש אפשרות אקח אותו איתי בתיק האישי",
+            "משאיר אותו במזוודה",
+            "מניח אותו על השולחן בחדר"
+        ],
+        correct: 1,
+        explanation: "יש לאחסן את המחשב בכספת בחדר או במקום נסתר אם אין כספת."
+    },
+    {
+        question: "מה יש לעשות במקרה של חשד לגישה לא מורשית?",
+        options: [
+            "להתעלם מהחשד",
+            "יש לדווח מידית לטל/ארז על כל חשד או אירוע של גישה לא מורשית",
+            "לנסות לפתור את הבעיה לבד",
+            "להמתין ולראות אם החשד מתממש"
+        ],
+        correct: 1,
+        explanation: "יש לדווח מידית לטל/ארז על כל חשד או אירוע של גישה לא מורשית."
+    },
+    {
+        question: "איזו מהפעולות הבאות אינה מומלצת לשמירה על אבטחת מידע?",
+        options: [
+            "שימוש בסיסמאות חזקות",
+            "ביצוע אימות דו-שלבי",
+            "שימוש ברשתות Wi-Fi ציבוריות",
+            "עדכון גרסאות תוכנה"
+        ],
+        correct: 2,
+        explanation: "שימוש ברשתות Wi-Fi ציבוריות אינו מומלץ לשמירה על אבטחת מידע."
+    },
+    {
+        question: "כיצד אנו אמורים לאבטח את הכניסה למחשב הנייד?",
+        options: [
+            "סיסמה פשוטה",
+            "לא צריך סיסמה אם אני שומר על המחשב",
+            "משתמש בסיסמה מורכבת",
+            "משתמש בסיסמה מורכבת ובנוסף משתמש בטביעת אצבע או זיהוי פנים"
+        ],
+        correct: 3,
+        explanation: "השימוש בסיסמה מורכבת ובשילוב עם אמצעי ביומטרי (כמו טביעת אצבע או זיהוי פנים) מספק את ההגנה המירבית."
+    },
+    {
+        question: "איזה מהאמצעים הבאים אסור בשימוש להעברת מידע חסוי?",
+        options: [
+            "כל התשובות נכונות",
+            "העברת מידע ברשתות חברתיות",
+            "שימוש בדיסק און קי",
+            "שימוש במחשבים זרים"
+        ],
+        correct: 0,
+        explanation: "אין להעביר מידע חסוי באמצעות התקני אחסון ניידים, רשתות חברתיות, או מחשבים זרים."
+    },
+    {
+        question: "באיזה שם קוד יש להגדיר מסמך מסווג?",
+        options: [
+            "אדום",
+            "שחור",
+            "סגול מנצנץ",
+            "כתום זוהר"
+        ],
+        correct: 0,
+        explanation: "מסמך מסווג יסומן בשם קוד 'אדום'."
+    },
+    {
+        question: "האם ניתן לקשר את חשבון המייל הפרטי לחשבון המייל של החברה?",
+        options: [
+            "כן, ככה יהיה לי יותר נוח",
+            "כן, מחבר את המייל הפרטי גם לחנות האפליקציות",
+            "לא, יש להפריד בין חשבונות פרטיים לעבודה",
+            "אני משתמש במייל של העבודה גם לצרכים אישיים"
+        ],
+        correct: 2,
+        explanation: "יש להפריד בין חשבונות פרטיים לחשבונות ותוכנות עבודה."
+    },
+    {
+        question: "מה ניתן להעלות לגוגל ארץ' מהחומרים הבאים?",
+        options: [
+            "שמות נכסים, שם לקוח, מידע אישי ורפואי",
+            "סרטוני הכירות מנכסים של לקוחות, פק״מ",
+            "שיטות עבודה של מחלקת שטח",
+            "מיקומים קודמים, שמות קוד ללקוח, תמונות מהמיקום ללא מידע חסוי, מסלולי הליכה או נסיעה"
+        ],
+        correct: 3,
+        explanation: "מותר להעלות מיקומים קודמים, שמות קוד ללקוח, תמונות מהמיקום ללא מידע חסוי, ומסלולי הליכה או נסיעה."
+    }
+];
+
+
+        let currentQuestion = 0;
+        let score = 0;
+        let userAnswers = [];
+        let timerInterval;
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function loadQuestion() {
+            const question = questions[currentQuestion];
+            document.getElementById('questionNumber').textContent = currentQuestion + 1;
+            document.getElementById('questionText').textContent = question.question;
+            const options = document.getElementById('options');
+            options.innerHTML = '';
+            
+            const shuffledOptions = [...question.options];
+            shuffleArray(shuffledOptions);
+            
+            shuffledOptions.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.onclick = () => selectAnswer(question.options.indexOf(option));
+                options.appendChild(button);
+            });
+            
+            updateProgressBar();
+            startTimer();
+        }
+
+        function selectAnswer(index) {
+            clearInterval(timerInterval);
+            userAnswers.push(questions[currentQuestion].options[index]);
+            if (index === questions[currentQuestion].correct) {
+                score++;
+            }
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('quiz').style.display = 'none';
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                <h2>Quiz Completed!</h2>
+                <p>Your score: <span id="score">${score}/${questions.length}</span></p>
+                <p>${getScoreMessage(score)}</p>
+                <button onclick="showReview()">Review Answers</button>
+            `;
+            resultDiv.style.display = 'block';
+        }
+
+        function getScoreMessage(score) {
+            if (score === questions.length) {
+                return "Excellent! You're a cybersecurity expert!";
+            } else if (score >= questions.length * 0.7) {
+                return "Good job! You have a solid understanding of cybersecurity.";
+            } else if (score >= questions.length * 0.5) {
+                return "Not bad, but there's room for improvement. Consider reviewing cybersecurity best practices.";
+            } else {
+                return "You need to improve your cybersecurity knowledge. Please review the materials and try again.";
+            }
+        }
+
+        function showReview() {
+            const reviewPage = document.getElementById('reviewPage');
+            const reviewContainer = document.getElementById('reviewContainer');
+            reviewContainer.innerHTML = '';
+            
+            questions.forEach((question, index) => {
+                const reviewItem = document.createElement('div');
+                reviewItem.className = 'review-item';
+                reviewItem.innerHTML = `
+                    <h3>Question ${index + 1}</h3>
+                    <p>${question.question}</p>
+                    <p>Your answer: <span class="${userAnswers[index] === question.options[question.correct] ? 'correct' : 'incorrect'}">${userAnswers[index]}</span></p>
+                    <p>Correct answer: <span class="correct">${question.options[question.correct]}</span></p>
+                    <p>Explanation: ${question.explanation}</p>
+                `;
+                reviewContainer.appendChild(reviewItem);
+            });
+            
+            document.getElementById('result').style.display = 'none';
+            reviewPage.style.display = 'block';
+        }
+
+        function startQuiz() {
+            document.getElementById('welcome').style.display = 'none';
+            document.getElementById('quiz').style.display = 'block';
+            shuffleArray(questions);
+            loadQuestion();
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            userAnswers = [];
+            document.getElementById('reviewPage').style.display = 'none';
+            document.getElementById('result').style.display = 'none';
+            startQuiz();
+        }
+
+        function updateProgressBar() {
+            const progressBar = document.getElementById('progressBar');
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        function startTimer() {
+            let timeLeft = 30;
+            document.getElementById('timeLeft').textContent = timeLeft;
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timeLeft').textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    selectAnswer(-1); // -1 to indicate no answer selected
+                }
+            }, 1000);
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('startQuiz').addEventListener('click', startQuiz);
+            document.getElementById('restartQuiz').addEventListener('click', restartQuiz);
+
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            darkModeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+            });
+        });
+    </script>
+</body>
+</html>
